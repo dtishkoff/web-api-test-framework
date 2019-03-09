@@ -1,0 +1,178 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.saucedemo.web</groupId>
+	<artifactId>web-functional-tests</artifactId>
+	<version>1.0-SNAPSHOT</version>
+	<packaging>jar</packaging>
+	<name>Library for API and UI level testing</name>
+	<properties>
+		<functional-test.screenshots.dir>
+			${project.build.directory}/failsafe-reports/screenshots
+		</functional-test.screenshots.dir>
+	</properties>
+
+<dependencies>	
+	<dependency>
+		<groupId>org.seleniumhq.selenium</groupId>
+		<artifactId>selenium-java</artifactId>
+		<version>3.6.0</version>
+	</dependency>
+	<dependency>
+		<groupId>org.apache.commons</groupId>
+		<artifactId>commons-io</artifactId>
+		<version>1.3.2</version>
+	</dependency>
+	<!--<dependency>-->
+		<!--<groupId>org.seleniumhq.selenium</groupId>-->
+		<!--<artifactId>selenium-chrome-driver</artifactId>-->
+		<!--<version>3.6.0</version>-->
+	<!--</dependency>-->
+	<dependency>
+		<groupId>com.codeborne</groupId>
+		<artifactId>phantomjsdriver</artifactId>
+		<version>1.4.0</version>
+	</dependency>
+	<dependency>
+		<groupId>junit</groupId>
+		<artifactId>junit</artifactId>
+		<version>4.12</version>
+		<scope>test</scope>
+	</dependency>
+	<dependency>
+		<groupId>log4j</groupId>
+		<artifactId>log4j</artifactId>
+		<version>1.2.17</version>
+	</dependency>
+	<dependency>
+		<groupId>junit</groupId>
+		<artifactId>junit</artifactId>
+		<version>4.12</version>
+	</dependency>
+
+	<dependency>
+		<groupId>com.jayway.restassured</groupId>
+		<artifactId>json-schema-validator</artifactId>
+		<version>2.8.0</version>
+	</dependency>
+
+	<dependency>
+		<groupId>com.jayway.restassured</groupId>
+		<artifactId>rest-assured</artifactId>
+		<version>2.9.0</version>
+	</dependency>
+	<dependency>
+		<groupId>com.googlecode.json-simple</groupId>
+		<artifactId>json-simple</artifactId>
+		<version>1.1.1</version>
+	</dependency>
+
+</dependencies>
+		
+<build>	
+	<plugins>
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-compiler-plugin</artifactId>
+			<configuration>
+				<source>1.8</source>
+				<target>1.8</target>
+			</configuration>
+		</plugin>
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-source-plugin</artifactId>
+			<version>3.0.1</version>
+		</plugin>
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-jar-plugin</artifactId>
+			<version>3.0.2</version>
+			<executions>
+				<execution>
+					<goals>
+						<goal>test-jar</goal>
+					</goals>
+				</execution>
+			</executions>
+		</plugin>
+
+		<plugin>
+			<artifactId>maven-failsafe-plugin</artifactId>
+			<configuration>
+				<systemPropertyVariables>
+					<functional-test.screenshots.dir>${functional-test.screenshots.dir}</functional-test.screenshots.dir>
+				</systemPropertyVariables>
+				<argLine>-Xmx2g</argLine>
+			</configuration>
+			<executions>
+				<execution>
+					<goals>
+						<goal>integration-test</goal>
+						<goal>verify</goal>
+					</goals>
+				</execution>
+			</executions>
+		</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<executions>
+						<!-- do *not* compile tests, as they are going to be executed from
+                            the jar; this prevents compilation from failing now, when it succeeded at
+                            the time the jar was made -->
+						<execution>
+							<id>default-testCompile</id>
+							<phase>test-compile</phase>
+							<goals>
+								<goal>testCompile</goal>
+							</goals>
+							<configuration>
+								<skip>true</skip>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</build>
+	<profiles>
+		<profile>
+			<id>from-test-jar</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-dependency-plugin</artifactId>
+						<version>2.8</version>
+						<executions>
+							<execution>
+								<id>unpack</id>
+								<phase>process-test-classes</phase>
+								<goals>
+									<goal>unpack</goal>
+								</goals>
+								<configuration>
+									<artifactItems>
+										<artifactItem>
+											<groupId>com.saucedemo.web</groupId>
+											<artifactId>web-functional-tests</artifactId>
+											<type>test-jar</type>
+											<outputDirectory>${project.build.directory}/jar-test-classes</outputDirectory>
+										</artifactItem>
+									</artifactItems>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<artifactId>maven-failsafe-plugin</artifactId>
+						<configuration>
+							<testClassesDirectory>${project.build.directory}/jar-test-classes</testClassesDirectory>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+</project>
