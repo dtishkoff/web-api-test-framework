@@ -2,7 +2,7 @@
 
 Framework contains both FE web and API level components and tests.
 
-# Getting Started
+### Getting Started
 
  - Clone repository
  - cd ~/[your-workspace]
@@ -47,11 +47,11 @@ which encapsulates all web elements located on that page.
  API tests are located under themoviedb.api.tests
 
 
-# UI tests: 
+### UI tests: 
 
 AddItemsToCartTest.java
 
-# API Working tests:
+### API Working tests:
 
 AuthenticationIT.java
 DiscoverIT.java
@@ -62,4 +62,4 @@ Movies.java
 
 
 
-# web-api-test-framework
+### web-api-test-framework
